@@ -124,6 +124,7 @@ const toDetail = (row: ProductModel) => {
   window.open(`${baseUrl}/pages/asset/paymentmode?productid=${row.id}&amount=${price}&merchandiseType=${row.product_type}&cName=${row.product_name_cn}`)
 
 }
+let flag = true
 
 // 获取最新数据
 const getNewProduct = async (id: number) => {
@@ -137,8 +138,16 @@ const getNewProduct = async (id: number) => {
       data.newList.unshift(newRes)
     }
   }
+  if (Number(newRes.product_price_original) < 108 && flag && newRes.sku_id == 104782) {
+    flag = false
+    window.open(`${baseUrl}/pages/asset/paymentmode?productid=${newRes.id}&amount=${newRes.product_price_original}&merchandiseType=${newRes.product_type}&cName=${newRes.product_name_cn}`)
+  }
   return newRes
 }
+
+setInterval(()=> {
+  flag = true
+},10000)
 
 let timer = setInterval(async () => {
   loadingNew.value = true
@@ -146,12 +155,12 @@ let timer = setInterval(async () => {
   if (data.newId) {
     num = await data.newId
   }
-  for (let i = num; i < num + 10; i++) {
+  for (let i = num; i < num + 4; i++) {
     await getNewProduct(i)
   }
   data.newId = data.newList[0].id as any
   loadingNew.value = false
-}, 5000)
+}, 2000)
 
 onMounted(async () => {
   getData(-1, -1)
@@ -160,6 +169,7 @@ onMounted(async () => {
   let latest = proRes[0]
   data.newId = latest.id
   // clearInterval(timer)
+
 })
 
 onUnmounted(() => {
@@ -268,7 +278,7 @@ onUnmounted(() => {
   font-size: 14px;
 }
 
-.loading-block{
+.loading-block {
   padding: 10px;
   text-align: center;
 }
