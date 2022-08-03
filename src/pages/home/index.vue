@@ -141,7 +141,7 @@ const getNewProduct = async (id: number) => {
     if (!isRepeat) {
       data.newList.unshift(newRes)
     }
-  }
+  } 
 
   // if (Number(newRes.product_price_original) < 650 && flag && newRes.series_id == 1081) {
   //   flag = false
