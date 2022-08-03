@@ -3,7 +3,7 @@ import request from "../utils/requestProcess"
 
 // 获取寄售藏品列表
 export const getProduct = async(params: any) => {
-  return request.get('/api/Org/Unimart/Product/getListOfProductNFTToBuy',{
+  return request.get('/api/Org/Unimart/Product/getListProductNFT',{
     params: params
   })
 }

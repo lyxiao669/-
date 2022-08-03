@@ -14,7 +14,7 @@ const proxy = {
     target: PROXY_MAGIC_URL,
     changeOrigin: true,
   },
-  '//static': {
+  '/page/1': {
     target: PROXY_NOTICE_URL,
     changeOrigin: true,
   },

@@ -48,7 +48,6 @@
 
       </el-container>
     </el-container>
-    <!-- <div class="get-notice" @click="getNotice">获取公告</div> -->
   </div>
 </template>
 
@@ -78,6 +77,7 @@ let data = reactive<{
   newList: [],
   newId: '' as any
 })
+
 const getData = async (skuId: number, series_id: number | null) => {
   loading.value = true
   let productsRes = await getProduct({
@@ -86,6 +86,9 @@ const getData = async (skuId: number, series_id: number | null) => {
     series: series_id,
     from_id: 0,
     limit: 100,
+    type:1,
+    page:1,
+    size:12,
     price_sort: 'asc'
   })
   loading.value = false
@@ -121,7 +124,7 @@ const toDetail = (row: ProductModel) => {
   // 跳转详情
   // window.open(`${baseUrl}/pages/market/sale-detail?id=${row.id}`)
   // 跳转付款页面
-  window.open(`${baseUrl}/pages/asset/paymentmode?productid=${row.id}&amount=${price}&merchandiseType=${row.product_type}&cName=${row.product_name_cn}`)
+  window.open(`${baseUrl}/pages/asset/paymentmode?productid=${row.id}&amount=${price}&merchandiseType=${row.product_type}&cName=${row.product_name_cn}&imgUrl=${row.banner_abbr_url}`)
 
 }
 let flag = true
@@ -132,16 +135,18 @@ const getNewProduct = async (id: number) => {
     product_type: 2,
     product_id: id
   }) as any
+
   if (newRes.id) {
     let isRepeat = data.newList.some(item => item.id == newRes.id)
     if (!isRepeat) {
       data.newList.unshift(newRes)
     }
   }
-  if (Number(newRes.product_price_original) < 108 && flag && newRes.sku_id == 104782) {
-    flag = false
-    window.open(`${baseUrl}/pages/asset/paymentmode?productid=${newRes.id}&amount=${newRes.product_price_original}&merchandiseType=${newRes.product_type}&cName=${newRes.product_name_cn}`)
-  }
+
+  // if (Number(newRes.product_price_original) < 650 && flag && newRes.series_id == 1081) {
+  //   flag = false
+  //   window.open(`${baseUrl}/pages/asset/paymentmode?productid=${newRes.id}&amount=${newRes.product_price_original}&merchandiseType=${newRes.product_type}&cName=${newRes.product_name_cn}`)
+  // }
   return newRes
 }
 
@@ -155,12 +160,12 @@ let timer = setInterval(async () => {
   if (data.newId) {
     num = await data.newId
   }
-  for (let i = num; i < num + 4; i++) {
+  for (let i = num; i < num + 7 ; i++) {
     await getNewProduct(i)
   }
   data.newId = data.newList[0].id as any
   loadingNew.value = false
-}, 2000)
+}, 3000)
 
 onMounted(async () => {
   getData(-1, -1)
@@ -169,7 +174,7 @@ onMounted(async () => {
   let latest = proRes[0]
   data.newId = latest.id
   // clearInterval(timer)
-
+  console.log('str','@'+ Math.random().toString(36).substr(2))
 })
 
 onUnmounted(() => {
